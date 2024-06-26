@@ -19,7 +19,7 @@ export class HmacguardGuard implements CanActivate {
 
     const completeURL =
       request.protocol + '://' + request.get('host') + request.originalUrl;
-
+console.log(completeURL)
     const key = request.headers['x-api-key'] ?? request.query['key'];
 
     const timestamp =
@@ -47,7 +47,7 @@ export class HmacguardGuard implements CanActivate {
     if (!result) {
       throw new ForbiddenException('Invalid Signature');
     }
-
+	console.log(result)
     return true;
   }
 
