@@ -1,0 +1,39 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <title>Verify Your Email</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 0; padding: 0; color: #333;
+      background-color: #f7f7f7; } .container { max-width: 100%; margin: 0 auto;
+      padding: 20px; box-sizing: border-box; } .email-content { max-width:
+      600px; margin: 20px auto; padding: 20px; background: #fff; border: 1px
+      solid #ddd; border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+      a.button { display: inline-block; padding: 10px 20px; margin-top: 25px;
+      background-color: #007bff; color: #ffffff; text-decoration: none;
+      border-radius: 5px; text-align: center; } a.button:hover {
+      background-color: #0056b3; } p { line-height: 1.5; } @media only screen
+      and (max-width: 620px) { .email-content { width: 95%; padding: 15px; }
+      .button { padding: 10px 15px; } }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+
+      <p>Hello {{name}},</p>
+      <p>Thank you for signing up. Please confirm your email address by clicking
+        the button below.</p>
+
+      <a href='{{url}}' class='button'>Verify Email Address</a>
+
+      <p>If you're having trouble clicking the button, copy and paste the URL
+        below into your web browser:</p>
+      <p><a href='{{url}}'>{{url}}</a></p>
+
+      <p>This link will expire in 24 hours. If you did not sign up, you can
+        safely ignore this email.</p>
+
+      <p>Thank you for helping us maintain the security of your account!</p>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,358 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
+  // uncomment next line if you use Prisma <5.10
+  // directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+enum UserRole {
+  ADMIN
+  CANDIDATE
+  EMPLOYER
+  EMPLOYEE
+  BLOG
+  SCHOOL
+}
+
+model User {
+  id                  String    @id @default(cuid())
+  full_name           String
+  email               String    @unique
+  email_verified      DateTime?
+  type                String
+  provider_account_id String?   @unique
+  image               String?
+  password            String?
+  role                UserRole  @default(CANDIDATE)
+
+  company    Company? @relation(fields: [company_id], references: [id])
+  company_id String?
+
+  candidate Candidate?
+
+  school    School? @relation(fields: [school_id], references: [id])
+  school_id String?
+
+  blog  Blog[]
+  token Token?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Token {
+  id            String  @id @default(cuid())
+  refresh_token String?
+  user          User    @relation(fields: [user_id], references: [id])
+  user_id       String  @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model VerificationToken {
+  id      String @id @default(cuid())
+  email   String @unique
+  token   String @unique @default(cuid())
+  expires Int
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String @id @default(cuid())
+  email   String @unique
+  token   String @unique @default(cuid())
+  expires Int
+
+  @@unique([email, token])
+}
+
+model Company {
+  id           String   @id @default(cuid())
+  name_company String
+  industry     String[]
+  company_size String
+  description  String?  @db.Text
+  logo         String? // URL to the company logo image
+  website      String?
+  email        String?
+  phone        String?
+  workplace    String[]
+  address      String?
+
+  twitter  String?
+  facebook String?
+  linkedin String?
+
+  job    Job[]
+  follow Follow[]
+  user   User[]
+
+  package    Package? @relation(fields: [package_id], references: [id])
+  package_id String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Package {
+  id          String    @id @default(cuid())
+  priority    Int
+  name        String
+  sale        Int?
+  description String?
+  price       Int
+  features    String[]
+  company     Company[]
+}
+
+model Job {
+  id            String        @id @default(cuid())
+  title_job     String
+  slug          String        @unique
+  industry      String[]
+  workplace     String[]
+  gender        String[]
+  age           String
+  experience    String
+  level         String
+  degree        String
+  languages     String[]
+  skills        String[]
+  currency      String
+  min_salary    Int
+  max_salary    Int
+  hidden_salary Boolean       @default(false)
+  job_type      String
+  deadline      DateTime
+  description   String
+  priority      Int
+  required      String
+  benefits      String
+  company_id    String?
+  company       Company?      @relation(fields: [company_id], references: [id])
+  saved_job     SavedJob[]
+  application   Application[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Candidate {
+  id             String      @id @default(cuid())
+  summary        String?
+  job_title      String?
+  public_profile Boolean     @default(false)
+  date_of_birth  DateTime?
+  married_status String      @default("male")
+  phone_number   String?
+  gender         String?
+  exp_year       Int?
+  industry       String?
+  job_level      String?
+  degree         String?
+  nationality    String?
+  country        String?
+  province       String?
+  district       String?
+  address        String?
+  website        String?
+  facebook_url   String?
+  linkedin_url   String?
+  twitter_url    String?
+  resume_url     String?
+  education      Education[]
+
+  desire    Desire? @relation(fields: [desire_id], references: [id])
+  desire_id String? @unique
+
+  resume_template ResumeTemplate? @relation(fields: [resume_id], references: [id])
+  resume_id       String?         @unique
+
+  certificate Certificate[]
+  languages   String[]
+  skills      String[]
+  experience  Experience[]
+  saved_job   SavedJob[]
+  application Application[]
+  follow      Follow[]
+  user        User          @relation(fields: [user_id], references: [id])
+  user_id     String        @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model ResumeTemplate {
+  id          String     @id @default(cuid())
+  color       String?
+  font_family String?
+  template_id String?
+  language    String?
+  user        Candidate?
+}
+
+model Education {
+  id              String     @id @default(cuid())
+  name_education  String
+  degree          String
+  majors          String
+  graduation_date DateTime
+  description     String?
+  candidate_id    String
+  candidate       Candidate? @relation(fields: [candidate_id], references: [id])
+}
+
+model Desire {
+  id         String     @id @default(cuid())
+  level      String
+  currency   String
+  min_salary Int
+  max_salary Int
+  job_type   String
+  industry   String
+  workplace  String[]
+  benefit    String[]
+  candidate  Candidate?
+}
+
+model Certificate {
+  id               String     @id @default(cuid())
+  name_certificate String
+  issued_by        String
+  issued_date      DateTime
+  expire_date      DateTime?
+  candidate_id     String
+  candidate        Candidate? @relation(fields: [candidate_id], references: [id])
+}
+
+model Experience {
+  id           String     @id @default(cuid())
+  job_title    String
+  company_name String
+  job_type     String
+  job_level    String
+  from         DateTime
+  to           DateTime?
+  description  String?
+  candidate_id String
+  candidate    Candidate? @relation(fields: [candidate_id], references: [id])
+}
+
+model SavedJob {
+  id           String    @id @default(cuid())
+  candidate_id String
+  candidate    Candidate @relation(fields: [candidate_id], references: [id])
+  job_id       String
+  job          Job       @relation(fields: [job_id], references: [id])
+}
+
+model Application {
+  id           String    @id @default(cuid())
+  candidate_id String
+  candidate    Candidate @relation(fields: [candidate_id], references: [id])
+  job_id       String
+  job          Job       @relation(fields: [job_id], references: [id])
+}
+
+model Follow {
+  id           String    @id @default(cuid())
+  candidate_id String
+  candidate    Candidate @relation(fields: [candidate_id], references: [id])
+  company_id   String
+  company      Company   @relation(fields: [company_id], references: [id])
+}
+
+model Blog {
+  id          String @id @default(cuid())
+  slug        String
+  title       String
+  name        String
+  thumbnail   String
+  banner      String
+  description String
+  locale      String
+  user_id     String
+  user        User   @relation(fields: [user_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Admissions {
+  id               String           @id @default(cuid())
+  title            String
+  slug             String
+  description      String
+  related_industry String[]
+  applies          ApplyAdmission[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model ApplyAdmission {
+  id            String      @id @default(cuid())
+  name          String
+  phone         String
+  address       String
+  majors        String
+  admissions    Admissions? @relation(fields: [admissions_id], references: [id])
+  admissions_id String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model School {
+  id               String           @id @default(cuid())
+  name             String
+  address          String
+  logo             String
+  hotline          String
+  student_profiles StudentProfile[]
+
+  user User[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model StudentProfile {
+  id               String   @id @default(cuid())
+  full_name        String
+  email            String
+  phone            String
+  job_title        String
+  age              String
+  resume_url       String
+  score            String
+  graduration_year String
+  field_of_study   String
+  school_id        String
+  school           School   @relation(fields: [school_id], references: [id])
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+}
+
+model Event {
+  id      String @id @default(cuid())
+  title   String
+  content String
+  locale  String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
