@@ -16,12 +16,11 @@ export class HmacguardGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const body = request.body ?? undefined;
+
     const isSecure =
       request.get('x-forwarded-proto') === 'https' || request.secure;
     const protocol = isSecure ? 'https' : 'http';
-
-    const completeURL =
-      request.protocol + '://' + request.get('host') + request.originalUrl;
+    const completeURL = `${protocol}://${request.get('host')}${request.originalUrl}`;
 
     const key = request.headers['x-api-key'] ?? request.query['key'];
 
@@ -36,7 +35,7 @@ export class HmacguardGuard implements CanActivate {
     }
 
     const secretKey = this.getSecretKey(key);
-    console.log(secretKey);
+
     const result = this.validateSignature(
       secretKey,
       signature,
