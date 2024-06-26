@@ -20,7 +20,8 @@ export class HmacguardGuard implements CanActivate {
       request.get('x-forwarded-proto') === 'https' || request.secure;
     const protocol = isSecure ? 'https' : 'http';
 
-    const completeURL = `${protocol}://${request.get('host')}${request.originalUrl}`;
+    const completeURL =
+      request.protocol + '://' + request.get('host') + request.originalUrl;
 
     const key = request.headers['x-api-key'] ?? request.query['key'];
 
@@ -49,7 +50,7 @@ export class HmacguardGuard implements CanActivate {
     if (!result) {
       throw new ForbiddenException('Invalid Signature');
     }
-
+    console.log(result);
     return true;
   }
 
