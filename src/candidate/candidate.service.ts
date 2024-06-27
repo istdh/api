@@ -318,4 +318,12 @@ export class CandidateService {
     });
     return { statusCode: 200, message: 'Success' };
   }
+
+  async updateResume(id: string, resume: string) {
+    await this.prisma.candidate.update({
+      where: { id },
+      data: { resume_url: resume },
+    });
+    return { statusCode: 200, message: 'Success' };
+  }
 }

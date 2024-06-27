@@ -26,13 +26,13 @@ export class CandidateController {
   constructor(private readonly candidateService: CandidateService) {}
 
   @Get('/get-me')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   getMeCandidate(@GetCurrentUser() user: JwtPayload) {
     return this.candidateService.getMeCandidate(user.sub);
   }
 
   @Patch('/change-image')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   changeImage(
     @GetCurrentUser() user: JwtPayload,
     @Body('image') image: string,
@@ -41,7 +41,7 @@ export class CandidateController {
   }
 
   @Patch('/update-info-candidate')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   updateInfo(
     @GetCurrentUser() user: JwtPayload,
     @Body() candidate: CandidateInfoUpdateDTO,
@@ -50,55 +50,55 @@ export class CandidateController {
   }
 
   @Patch('/update-education')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   updateEducation(@Body() education: EducationDTO) {
     return this.candidateService.updateEducation(education);
   }
 
   @Delete('/delete-education/:id')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   deleteEducation(@Param('id') id: string) {
     return this.candidateService.deleteEducation(id);
   }
 
   @Post('/create-education')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   createEducation(@GetCandidate() id: string, @Body() education: EducationDTO) {
     return this.candidateService.createEducation(education, id);
   }
 
   @Post('/create-desire')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   createDerise(@GetCandidate() id: string, @Body() desire: DesireDTO) {
     return this.candidateService.createDesire(id, desire);
   }
 
   @Patch('/update-desire')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   editDesire(@Body() desire: DesireDTO) {
     return this.candidateService.updateDesire(desire);
   }
 
   @Delete('/delete-desire/:id')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   deleteDesire(@Param('id') id: string, @GetCandidate() candidate_id: string) {
     return this.candidateService.deleteDesire(id, candidate_id);
   }
 
   @Patch('/update-language')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   updateLanguage(@GetCandidate() id: string, @Body() languages: string[]) {
     return this.candidateService.updateLanguage(id, languages);
   }
 
   @Patch('/change-email')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   changeEmail(@Body() payload: ChangeEmailDTO) {
     return this.candidateService.changeEmail(payload);
   }
 
   @Patch('/change-password')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   changePassword(
     @GetCurrentUser() user: JwtPayload,
     @Body() payload: ChangePasswordDTO,
@@ -107,25 +107,25 @@ export class CandidateController {
   }
 
   @Post('/create-experience')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   createExperience(@GetCandidate() id: string, @Body() payload: ExperienceDTO) {
     return this.candidateService.createExperience(payload, id);
   }
 
   @Patch('/update-experience')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   updateExperience(@Body() payload: UpdateExperienceDTO) {
     return this.candidateService.updateExperience(payload);
   }
 
   @Delete('/delete-experience/:id')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   deleteExperience(@Param('id') id: string) {
     return this.candidateService.deleteExperience(id);
   }
 
   @Patch('/add-skill')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   addSkill(
     @GetCandidate() id: string,
     @Body('skill') skill: string,
@@ -135,7 +135,7 @@ export class CandidateController {
   }
 
   @Post('/create-certificate')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   createCertificate(
     @GetCandidate() id: string,
     @Body() payload: CertificationDTO,
@@ -144,14 +144,20 @@ export class CandidateController {
   }
 
   @Patch('/update-certificate')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   updateCertificate(@Body() payload: CertificationDTO) {
     return this.candidateService.updateCertificate(payload);
   }
 
   @Delete('/delete-certificate/:id')
-  @UseGuards(AccessTokenGuard, HmacguardGuard)
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
   deleteCertificate(@Param('id') id: string) {
     return this.candidateService.deleteCertificate(id);
+  }
+
+  @Patch('/update-resume')
+  @UseGuards(HmacguardGuard, AccessTokenGuard)
+  updateResume(@GetCandidate() id: string, @Body('resume') resume: string) {
+    return this.candidateService.updateResume(id, resume);
   }
 }

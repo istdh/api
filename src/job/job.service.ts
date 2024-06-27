@@ -1469,6 +1469,7 @@ export class JobService {
     const job = await this.prisma.job.findUnique({
       where: { slug },
       include: {
+        application: true,
         company: {
           include: {
             job: {
@@ -1478,6 +1479,7 @@ export class JobService {
                 },
               },
               include: {
+                application: true,
                 company: {
                   select: {
                     logo: true,

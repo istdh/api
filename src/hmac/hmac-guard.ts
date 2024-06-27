@@ -49,7 +49,7 @@ export class HmacguardGuard implements CanActivate {
     if (!result) {
       throw new ForbiddenException('Invalid Signature');
     }
-    console.log(result);
+
     return true;
   }
 
