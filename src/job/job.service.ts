@@ -1437,6 +1437,12 @@ export class JobService {
           },
         },
       },
+      orderBy: [
+        {
+          priority: 'desc',
+        },
+        { created_at: 'desc' },
+      ],
     });
 
     return hotJobs;
@@ -1460,6 +1466,12 @@ export class JobService {
           },
         },
       },
+      orderBy: [
+        {
+          priority: 'desc',
+        },
+        { created_at: 'desc' },
+      ],
     });
 
     return jobs;
@@ -1540,6 +1552,12 @@ export class JobService {
       },
       skip: (Number(page) - 1) * 16,
       take: 16,
+      orderBy: [
+        {
+          priority: 'desc',
+        },
+        { created_at: 'desc' },
+      ],
     });
 
     return { jobs, count };
